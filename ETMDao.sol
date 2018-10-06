@@ -10,21 +10,27 @@ contract ETMDao is AragonApp {
     /*
     * @dev As an AragonApp it needs to be initialized in order for roles (`auth` and `authP`) to work
     */
-    function initialize() external onlyInit {
+    function initialize() public onlyInit {
         initialized();
-        // token = new EtheratomToken();
     }
 
     /*
-    * @dev transferForCash function is used to transfer Token to a supporter
+    * @dev transferForCash is used to transfer Token to a supporter from the DAO contract
     */
-    function transferForCash(address _to, uint256 value) public {
+    function transferForCash(address _to, uint256 value) external isInitialized {
         token.transfer(_to, value);
     }
 
+    /*
+    * @dev addToken is used to add a Token by address to DAO
+    */
     function addToken(address _tokenaddr) public {
         token = EtheratomToken(_tokenaddr);
     }
+
+    /*
+    * @dev balanceOf is proxy for Token's balanceOf function
+    */
     function balanceOf(address _owner) public view returns (uint256) {
         return token.balanceOf(_owner);
     }
